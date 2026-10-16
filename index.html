@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeCraftHub Learning Management Platform</title>
+  <style>
+    :root {
+      --purple: #8B5CF6;
+      --purple-dark: #6D28D9;
+      --amber: #F59E0B;
+      --red: #EF4444;
+      --ink: #1F2937;
+      --muted: #6B7280;
+      --line: #E5E7EB;
+      --page: #F5F3FF;
+      --white: #FFFFFF;
+      --shadow: 0 14px 35px rgba(76, 29, 149, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font: 16px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: 0.6; }
+
+    .app-header {
+      padding: 48px 24px 76px;
+      color: var(--white);
+      background: linear-gradient(135deg, #5B21B6, var(--purple) 60%, #A78BFA);
+    }
+
+    .header-content, main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #EDE9FE;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 800px; margin-bottom: 0; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.08; }
+    h2 { margin-bottom: 4px; font-size: 1.5rem; }
+    h3 { margin-bottom: 8px; font-size: 1.2rem; }
+
+    main {
+      position: relative;
+      margin-top: -42px;
+      padding-bottom: 60px;
+    }
+
+    .panel {
+      padding: clamp(20px, 4vw, 32px);
+      border: 1px solid rgba(229, 231, 235, 0.8);
+      border-radius: 18px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .form-header, .list-header, .card-top, .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .form-header { margin-bottom: 24px; }
+    .subtle { margin-bottom: 0; color: var(--muted); font-size: 0.94rem; }
+
+    .course-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field-wide { grid-column: 1 / -1; }
+    label { color: #374151; font-size: 0.9rem; font-weight: 700; }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      color: var(--ink);
+      border: 1px solid #D1D5DB;
+      border-radius: 10px;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    textarea { min-height: 112px; resize: vertical; }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.16);
+    }
+
+    .form-actions { display: flex; flex-wrap: wrap; gap: 10px; grid-column: 1 / -1; margin-top: 4px; }
+    .button {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-weight: 800;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    .button:hover:not(:disabled) { transform: translateY(-1px); }
+    .button-primary { color: #fff; background: var(--purple); box-shadow: 0 5px 14px rgba(139, 92, 246, 0.25); }
+    .button-primary:hover:not(:disabled) { background: var(--purple-dark); }
+    .button-secondary { color: #4B5563; background: #F3F4F6; }
+    .button-secondary:hover:not(:disabled) { background: #E5E7EB; }
+    .button-danger { color: #B91C1C; background: #FEF2F2; }
+    .button-danger:hover:not(:disabled) { background: #FEE2E2; }
+    .button-small { padding: 8px 12px; font-size: 0.88rem; }
+
+    .notice {
+      display: none;
+      margin: 18px 0 0;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: 650;
+    }
+    .notice.visible { display: block; }
+    .notice-success { color: #166534; background: #DCFCE7; }
+    .notice-error { color: #991B1B; background: #FEE2E2; }
+
+    .courses-section { margin-top: 32px; }
+    .list-header { margin-bottom: 16px; }
+    .course-count { color: var(--muted); font-size: 0.92rem; font-weight: 700; }
+    .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+
+    .course-card {
+      display: flex;
+      min-height: 260px;
+      flex-direction: column;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--white);
+      box-shadow: 0 7px 20px rgba(17, 24, 39, 0.05);
+    }
+    .card-top { align-items: flex-start; margin-bottom: 12px; }
+    .course-card h3 { overflow-wrap: anywhere; }
+    .description { min-height: 48px; margin-bottom: 20px; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .status {
+      flex: 0 0 auto;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .status-not-started { color: #92400E; background: #FEF3C7; }
+    .status-in-progress { color: #5B21B6; background: #EDE9FE; }
+    .status-completed { color: #166534; background: #DCFCE7; }
+    .course-details { display: grid; gap: 8px; margin-bottom: 22px; }
+    .detail { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 0.88rem; }
+    .detail strong { color: var(--ink); text-align: right; font-weight: 700; }
+    .card-footer { margin-top: auto; justify-content: flex-start; }
+
+    .empty-state, .loading-state {
+      padding: 38px 20px;
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed #C4B5FD;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+    .empty-state strong { display: block; margin-bottom: 4px; color: var(--ink); font-size: 1.05rem; }
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      vertical-align: -5px;
+      border: 3px solid #DDD6FE;
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 640px) {
+      .app-header { padding: 32px 16px 66px; }
+      .header-content, main { width: min(100% - 24px, 1120px); }
+      .course-form { grid-template-columns: 1fr; }
+      .field-wide, .form-actions { grid-column: auto; }
+      .form-header, .list-header { align-items: flex-start; flex-direction: column; gap: 6px; }
+      .detail { flex-direction: column; gap: 0; }
+      .detail strong { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-content">
+      <p class="eyebrow">Learning dashboard</p>
+      <h1>CodeCraftHub: Your Learning Management Platform</h1>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel" aria-labelledby="form-title">
+      <div class="form-header">
+        <div>
+          <h2 id="form-title">Add a course</h2>
+          <p class="subtle" id="form-description">Plan your next learning milestone.</p>
+        </div>
+      </div>
+      <form id="course-form" class="course-form" novalidate>
+        <div class="field field-wide">
+          <label for="course-name">Course Name</label>
+          <input id="course-name" name="name" type="text" required maxlength="200" autocomplete="off">
+        </div>
+        <div class="field field-wide">
+          <label for="course-description">Description</label>
+          <textarea id="course-description" name="description" required maxlength="2000"></textarea>
+        </div>
+        <div class="field">
+          <label for="target-date">Target Completion Date</label>
+          <input id="target-date" name="target_date" type="date" required>
+        </div>
+        <div class="field">
+          <label for="course-status">Status</label>
+          <select id="course-status" name="status" required>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="button button-primary" id="submit-button" type="submit">Add Course</button>
+          <button class="button button-secondary" id="cancel-button" type="button" hidden>Cancel Edit</button>
+        </div>
+      </form>
+      <div id="form-notice" class="notice" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="courses-section" aria-labelledby="courses-title">
+      <div class="list-header">
+        <div>
+          <h2 id="courses-title">Your courses</h2>
+          <p class="subtle">Keep your learning goals moving forward.</p>
+        </div>
+        <span id="course-count" class="course-count">0 courses</span>
+      </div>
+      <div id="loading-state" class="loading-state" role="status" aria-live="polite">
+        <span class="spinner" aria-hidden="true"></span>Loading courses...
+      </div>
+      <div id="course-grid" class="course-grid" hidden></div>
+      <div id="empty-state" class="empty-state" hidden>
+        <strong>No courses yet</strong>
+        Add your first course above to start building your learning plan.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "/api/courses";
+    const STATUS_VALUES = ["Not Started", "In Progress", "Completed"];
+    const form = document.getElementById("course-form");
+    const formTitle = document.getElementById("form-title");
+    const formDescription = document.getElementById("form-description");
+    const submitButton = document.getElementById("submit-button");
+    const cancelButton = document.getElementById("cancel-button");
+    const formNotice = document.getElementById("form-notice");
+    const courseGrid = document.getElementById("course-grid");
+    const loadingState = document.getElementById("loading-state");
+    const emptyState = document.getElementById("empty-state");
+    const courseCount = document.getElementById("course-count");
+    let editingCourseId = null;
+    let courses = [];
+
+    function showNotice(message, type) {
+      formNotice.textContent = message;
+      formNotice.className = "notice visible " + (type === "success" ? "notice-success" : "notice-error");
+    }
+
+    function clearNotice() {
+      formNotice.textContent = "";
+      formNotice.className = "notice";
+    }
+
+    function setBusy(isBusy, label) {
+      submitButton.disabled = isBusy;
+      cancelButton.disabled = isBusy;
+      submitButton.textContent = isBusy ? label : (editingCourseId === null ? "Add Course" : "Save Changes");
+      document.querySelectorAll(".card-action").forEach(function (button) {
+        button.disabled = isBusy;
+      });
+    }
+
+    async function parseResponse(response) {
+      let payload;
+      try {
+        payload = await response.json();
+      } catch (_error) {
+        throw new Error("The server returned an unexpected response.");
+      }
+      if (!response.ok || payload.success === false) {
+        throw new Error(payload.error || "The request could not be completed.");
+      }
+      return payload;
+    }
+
+    async function apiRequest(url, options) {
+      let response;
+      try {
+        response = await fetch(url, options);
+      } catch (_error) {
+        throw new Error("Unable to connect to the course service.");
+      }
+      return parseResponse(response);
+    }
+
+    function formatDate(dateValue) {
+      if (!dateValue) return "Not provided";
+      const date = new Date(dateValue.includes(" ") ? dateValue.replace(" ", "T") : dateValue + "T00:00:00");
+      if (Number.isNaN(date.getTime())) return dateValue;
+      return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    }
+
+    function statusClass(status) {
+      return status === "Completed" ? "status-completed" : status === "In Progress" ? "status-in-progress" : "status-not-started";
+    }
+
+    function addDetail(container, label, value) {
+      const detail = document.createElement("div");
+      detail.className = "detail";
+      const labelElement = document.createElement("span");
+      labelElement.textContent = label;
+      const valueElement = document.createElement("strong");
+      valueElement.textContent = value;
+      detail.append(labelElement, valueElement);
+      container.appendChild(detail);
+    }
+
+    function createCourseCard(course) {
+      const card = document.createElement("article");
+      card.className = "course-card";
+      card.dataset.courseId = String(course.id);
+
+      const top = document.createElement("div");
+      top.className = "card-top";
+      const title = document.createElement("h3");
+      title.textContent = course.name;
+      const status = document.createElement("span");
+      status.className = "status " + statusClass(course.status);
+      status.textContent = course.status;
+      top.append(title, status);
+
+      const description = document.createElement("p");
+      description.className = "description";
+      description.textContent = course.description;
+
+      const details = document.createElement("div");
+      details.className = "course-details";
+      addDetail(details, "Target date", formatDate(course.target_date));
+      addDetail(details, "Created", formatDate(course.created_at));
+
+      const footer = document.createElement("div");
+      footer.className = "card-footer";
+      const editButton = document.createElement("button");
+      editButton.className = "button button-secondary button-small card-action";
+      editButton.type = "button";
+      editButton.textContent = "Edit";
+      editButton.addEventListener("click", function () { startEditing(course); });
+      const removeButton = document.createElement("button");
+      removeButton.className = "button button-danger button-small card-action";
+      removeButton.type = "button";
+      removeButton.textContent = "Remove";
+      removeButton.addEventListener("click", function () { removeCourse(course); });
+      footer.append(editButton, removeButton);
+
+      card.append(top, description, details, footer);
+      return card;
+    }
+
+    function renderCourses() {
+      courseGrid.replaceChildren();
+      courseCount.textContent = courses.length + (courses.length === 1 ? " course" : " courses");
+      if (courses.length === 0) {
+        courseGrid.hidden = true;
+        emptyState.hidden = false;
+        return;
+      }
+      courses.forEach(function (course) { courseGrid.appendChild(createCourseCard(course)); });
+      emptyState.hidden = true;
+      courseGrid.hidden = false;
+    }
+
+    async function loadCourses() {
+      loadingState.hidden = false;
+      courseGrid.hidden = true;
+      emptyState.hidden = true;
+      try {
+        const payload = await apiRequest(API_BASE);
+        courses = Array.isArray(payload.courses) ? payload.courses : [];
+        renderCourses();
+      } catch (error) {
+        emptyState.textContent = error.message;
+        emptyState.hidden = false;
+      } finally {
+        loadingState.hidden = true;
+      }
+    }
+
+    function resetForm() {
+      form.reset();
+      document.getElementById("course-status").value = "Not Started";
+      editingCourseId = null;
+      formTitle.textContent = "Add a course";
+      formDescription.textContent = "Plan your next learning milestone.";
+      submitButton.textContent = "Add Course";
+      cancelButton.hidden = true;
+    }
+
+    function startEditing(course) {
+      editingCourseId = course.id;
+      document.getElementById("course-name").value = course.name || "";
+      document.getElementById("course-description").value = course.description || "";
+      document.getElementById("target-date").value = course.target_date || "";
+      document.getElementById("course-status").value = STATUS_VALUES.includes(course.status) ? course.status : "Not Started";
+      formTitle.textContent = "Edit course";
+      formDescription.textContent = "Update the details for this learning goal.";
+      submitButton.textContent = "Save Changes";
+      cancelButton.hidden = false;
+      clearNotice();
+      document.getElementById("course-name").focus();
+    }
+
+    function getFormData() {
+      const data = Object.fromEntries(new FormData(form).entries());
+      if (!data.name.trim() || !data.description.trim() || !data.target_date || !STATUS_VALUES.includes(data.status)) {
+        throw new Error("Please complete all required course fields.");
+      }
+      data.name = data.name.trim();
+      data.description = data.description.trim();
+      return data;
+    }
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      clearNotice();
+      let data;
+      try {
+        data = getFormData();
+      } catch (error) {
+        showNotice(error.message, "error");
+        return;
+      }
+
+      const isEditing = editingCourseId !== null;
+      setBusy(true, isEditing ? "Saving..." : "Adding...");
+      try {
+        const url = isEditing ? API_BASE + "/" + encodeURIComponent(editingCourseId) : API_BASE;
+        await apiRequest(url, {
+          method: isEditing ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        resetForm();
+        showNotice(isEditing ? "Course updated successfully." : "Course added successfully.", "success");
+        await loadCourses();
+      } catch (error) {
+        showNotice(error.message, "error");
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    cancelButton.addEventListener("click", function () {
+      resetForm();
+      clearNotice();
+    });
+
+    async function removeCourse(course) {
+      if (!window.confirm("Remove \"" + course.name + "\" from your courses?")) return;
+      clearNotice();
+      setBusy(true, "Working...");
+      try {
+        await apiRequest(API_BASE + "/" + encodeURIComponent(course.id), { method: "DELETE" });
+        showNotice("Course deleted successfully.", "success");
+        await loadCourses();
+      } catch (error) {
+        showNotice(error.message, "error");
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    loadCourses();
+  </script>
+</body>
+</html>
