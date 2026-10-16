@@ -1,0 +1,27 @@
+CodeCraftHub Part 1 - GitHub Upload Checklist
+
+Recommended public repo name:
+codecrafthub-course-dashboard
+
+Upload these Part 1 files to the repository root:
+- .gitignore
+- app.py
+- courses.json
+- requirements.txt
+- README.md
+- TESTING.md
+- tests.sh
+- test_app.py
+- PROMPTS.md
+- PART1_DELIVERABLES.md
+- PART1_COPY_PASTE.txt
+- VALIDATION_REPORT.txt
+
+Do NOT upload:
+- .env files
+- access tokens
+- passwords
+- Python virtual environments
+- __pycache__ folders
+
+Part 2 will later add index.html to this same repository/folder.

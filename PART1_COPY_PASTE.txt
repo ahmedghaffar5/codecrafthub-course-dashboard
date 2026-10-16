@@ -1,0 +1,18 @@
+CodeCraftHub Part 1 - Python/Flask
+
+Ready items:
+- Flask REST API
+- JSON file storage
+- No database
+- No authentication
+- POST /api/courses
+- GET /api/courses
+- GET /api/courses/<id>
+- PUT /api/courses/<id>
+- DELETE /api/courses/<id>
+- id, name, description, target_date, status, created_at
+- validation and error handling
+- README documentation
+- cURL tests
+- automated tests
+- IBM GenAI Classroom prompts

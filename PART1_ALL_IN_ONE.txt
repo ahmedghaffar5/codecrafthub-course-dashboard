@@ -1,0 +1,234 @@
+# Part 1 — IBM GenAI Classroom Prompts
+
+Paste these prompts into the IBM GenAI Classroom when the Part 1 lab asks for them.
+
+## Prompt 1 — Requirements / architecture
+
+```text
+I want to create a simple personalized learning platform called CodeCraftHub where developers can track courses they want to learn.
+
+Requirements:
+- Use Python with Flask framework
+- Store course data in a simple JSON text file (NO database needed)
+- No authentication or user management needed
+- Focus on learning REST API basics
+
+Each course should track the following:
+- Course name
+- Description
+- Target completion date
+- Current status (Not Started, In Progress, Completed)
+
+Recommend:
+1. A simple project structure for beginners
+2. The REST API endpoints to be created
+3. How to store and retrieve data from a JSON file
+```
+
+## Prompt 2 — Generate app.py
+
+```text
+Now create the complete Python Flask code for app.py with these requirements:
+
+1. Create a Flask REST API with all CRUD operations for courses
+2. Store data in a JSON file called "courses.json"
+3. Include these endpoints:
+   - POST /api/courses - Add a new course
+   - GET /api/courses - Get all courses
+   - GET /api/courses/<id> - Get a specific course
+   - PUT /api/courses/<id> - Update a course
+   - DELETE /api/courses/<id> - Delete a course
+
+4. Each course must have:
+   - id (auto-generated, starting from 1)
+   - name (required)
+   - description (required)
+   - target_date (required, format YYYY-MM-DD)
+   - status (required, must be: "Not Started", "In Progress", or "Completed")
+   - created_at (auto-generated timestamp)
+
+5. Include proper error handling for:
+   - Missing required fields
+   - Course not found
+   - Invalid status values
+   - File read/write errors
+
+6. Add helpful comments throughout the code for beginners
+7. Make sure the app creates courses.json automatically if it doesn't exist
+```
+
+## Prompt 3 — Generate test cases
+
+```text
+Create comprehensive test cases for the CodeCraftHub API. Provide:
+
+1. curl commands to test each endpoint
+2. Example JSON payloads for POST and PUT requests
+3. Expected responses for successful operations
+4. Test cases for error scenarios (missing fields, invalid data, course not found)
+
+Make the tests easy to copy and paste for beginners.
+```
+
+## Prompt 4 — Generate README
+
+```text
+Create a complete README.md file for the CodeCraftHub project that includes:
+
+1. Project overview and description
+2. Features list
+3. Installation instructions (step-by-step)
+4. How to run the application
+5. API endpoints documentation with examples
+6. Testing instructions
+7. Troubleshooting common issues
+8. Project structure explanation
+
+Write it for beginners who are learning REST APIs for the first time.
+```
+
+## Optional challenge prompt
+
+```text
+Add a new endpoint GET /api/courses/stats that returns statistics about courses:
+- Total number of courses
+- Number of courses by status (Not Started, In Progress, Completed)
+```
+
+The optional challenge is not included in the baseline project because it is not required for Part 1 completion.
+# CodeCraftHub Part 1 — Ready Deliverables
+
+## Project deliverables
+
+- `app.py` — complete Python Flask CRUD API
+- `courses.json` — JSON data store initialized as an empty list
+- `requirements.txt` — Flask/Werkzeug dependencies
+- `README.md` — project documentation
+- `.gitignore` — excludes local/secret/dev-only files
+
+## Testing deliverables
+
+- `TESTING.md` — cURL commands, payloads, expected results, and error scenarios
+- `tests.sh` — fast cURL runner after the server is started
+- `test_app.py` — automated Flask test-client suite
+
+## GenAI deliverables
+
+- `PROMPTS.md` — Part 1 IBM GenAI Classroom prompts
+- `PART1_COPY_PASTE.txt` — compact checklist/reference
+
+## Implemented REST endpoints
+
+- `POST /api/courses`
+- `GET /api/courses`
+- `GET /api/courses/<id>`
+- `PUT /api/courses/<id>`
+- `DELETE /api/courses/<id>`
+
+## Implemented fields
+
+- `id`
+- `name`
+- `description`
+- `target_date`
+- `status`
+- `created_at`
+
+## Implemented validation/error handling
+
+- Missing required fields
+- Invalid/missing JSON body
+- Invalid target date format
+- Invalid status value
+- Course not found
+- JSON file creation/read/write errors
+
+## Verification commands for IBM/Theia later
+
+```bash
+python3 -m pip install -r requirements.txt
+python3 -m py_compile app.py
+python3 -m unittest -v test_app.py
+python3 app.py
+```
+
+Then from a second terminal:
+
+```bash
+bash tests.sh
+```
+
+## Expected final Part 1 state
+
+- Flask API runs on port 5000
+- CRUD operations work
+- Data persists in `courses.json`
+- Error handling works
+- Documentation and tests exist
+- Files are ready for GitHub and for cloning into the Part 2 IBM/Theia environment
+CodeCraftHub Part 1 - Python/Flask
+
+Ready items:
+- Flask REST API
+- JSON file storage
+- No database
+- No authentication
+- POST /api/courses
+- GET /api/courses
+- GET /api/courses/<id>
+- PUT /api/courses/<id>
+- DELETE /api/courses/<id>
+- id, name, description, target_date, status, created_at
+- validation and error handling
+- README documentation
+- cURL tests
+- automated tests
+- IBM GenAI Classroom prompts
+CodeCraftHub Part 1 - Validation Report
+
+Completed checks in the artifact build environment:
+- app.py Python syntax compilation: PASS
+- test_app.py Python syntax compilation: PASS
+- Required files present: PASS
+- Required REST route definitions present: PASS
+- Required status values present: PASS
+- JSON storage file initialized as []: PASS
+
+Runtime test note:
+The artifact build environment has no network access and does not have Flask preinstalled, so dependency installation and live Flask execution could not be performed here. Run the included IBM/Theia verification commands after cloning in the course terminal:
+
+python3 -m pip install -r requirements.txt
+python3 -m py_compile app.py
+python3 -m unittest -v test_app.py
+python3 app.py
+
+Then in a second terminal:
+
+bash tests.sh
+CodeCraftHub Part 1 - GitHub Upload Checklist
+
+Recommended public repo name:
+codecrafthub-course-dashboard
+
+Upload these Part 1 files to the repository root:
+- .gitignore
+- app.py
+- courses.json
+- requirements.txt
+- README.md
+- TESTING.md
+- tests.sh
+- test_app.py
+- PROMPTS.md
+- PART1_DELIVERABLES.md
+- PART1_COPY_PASTE.txt
+- VALIDATION_REPORT.txt
+
+Do NOT upload:
+- .env files
+- access tokens
+- passwords
+- Python virtual environments
+- __pycache__ folders
+
+Part 2 will later add index.html to this same repository/folder.

@@ -1,0 +1,21 @@
+CodeCraftHub Part 1 - Validation Report
+
+Completed checks in the artifact build environment:
+- app.py Python syntax compilation: PASS
+- test_app.py Python syntax compilation: PASS
+- Required files present: PASS
+- Required REST route definitions present: PASS
+- Required status values present: PASS
+- JSON storage file initialized as []: PASS
+
+Runtime test note:
+The artifact build environment has no network access and does not have Flask preinstalled, so dependency installation and live Flask execution could not be performed here. Run the included IBM/Theia verification commands after cloning in the course terminal:
+
+python3 -m pip install -r requirements.txt
+python3 -m py_compile app.py
+python3 -m unittest -v test_app.py
+python3 app.py
+
+Then in a second terminal:
+
+bash tests.sh
